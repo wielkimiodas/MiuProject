@@ -1,6 +1,6 @@
 using System;
 
-namespace RaceGame
+namespace RaceGamePhone
 {
 #if WINDOWS || XBOX
     static class Program

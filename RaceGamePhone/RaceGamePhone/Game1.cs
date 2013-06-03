@@ -7,9 +7,10 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Input.Touch;
 using Microsoft.Xna.Framework.Media;
 
-namespace RaceGame
+namespace RaceGamePhone
 {
     /// <summary>
     /// This is the main type for your game
@@ -23,6 +24,12 @@ namespace RaceGame
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+
+            // Frame rate is 30 fps by default for Windows Phone.
+            TargetElapsedTime = TimeSpan.FromTicks(333333);
+
+            // Extend battery life under lock.
+            InactiveSleepTime = TimeSpan.FromSeconds(1);
         }
 
         /// <summary>

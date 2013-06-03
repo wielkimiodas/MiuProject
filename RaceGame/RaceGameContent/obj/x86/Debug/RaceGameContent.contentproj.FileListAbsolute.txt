@@ -1,6 +1,0 @@
-c:\users\tomek\documents\visual studio 2010\Projects\RaceGame\RaceGame\RaceGameContent\obj\x86\Debug\ResolveAssemblyReference.cache
-E:\RaceGame\RaceGame\RaceGameContent\obj\x86\Debug\ResolveAssemblyReference.cache
-F:\TWO\RaceGame\RaceGame\RaceGameContent\obj\x86\Debug\ResolveAssemblyReference.cache
-E:\TWO\New folder\RaceGame\RaceGame\RaceGameContent\obj\x86\Debug\ResolveAssemblyReference.cache
-F:\TWO\New folder\RaceGame\RaceGame\RaceGameContent\obj\x86\Debug\ResolveAssemblyReference.cache
-F:\TWO\RaceGame1\RaceGame\RaceGameContent\obj\x86\Debug\ResolveAssemblyReference.cache

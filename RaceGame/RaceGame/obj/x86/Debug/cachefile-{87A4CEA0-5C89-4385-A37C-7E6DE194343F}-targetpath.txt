@@ -1,3 +1,0 @@
-Content\image.xnb
-Content\car.xnb
-Content\line.xnb
