@@ -91,6 +91,7 @@ namespace RaceGamePhone
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
+            //bla
 
             base.Draw(gameTime);
         }
