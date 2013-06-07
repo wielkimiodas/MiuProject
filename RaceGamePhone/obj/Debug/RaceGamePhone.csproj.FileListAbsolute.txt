@@ -1,0 +1,13 @@
+V:\MiuProject\RaceGamePhone\Bin\Debug\ApplicationIcon.png
+V:\MiuProject\RaceGamePhone\Bin\Debug\Background.png
+V:\MiuProject\RaceGamePhone\Bin\Debug\RaceGamePhone.dll
+V:\MiuProject\RaceGamePhone\Bin\Debug\RaceGamePhone.pdb
+V:\MiuProject\RaceGamePhone\Bin\Debug\AppManifest.xaml
+V:\MiuProject\RaceGamePhone\Bin\Debug\RaceGamePhone.xap
+V:\MiuProject\RaceGamePhone\obj\Debug\ResolveAssemblyReference.cache
+V:\MiuProject\RaceGamePhone\obj\Debug\App.g.i.cs
+V:\MiuProject\RaceGamePhone\obj\Debug\MainPage.g.i.cs
+V:\MiuProject\RaceGamePhone\obj\Debug\RaceGamePhone.g.resources
+V:\MiuProject\RaceGamePhone\obj\Debug\RaceGamePhone.dll
+V:\MiuProject\RaceGamePhone\obj\Debug\RaceGamePhone.pdb
+V:\MiuProject\RaceGamePhone\obj\Debug\XapCacheFile.xml

@@ -19,6 +19,39 @@ namespace RaceGamePhone
         public MainPage()
         {
             InitializeComponent();
+            Console.WriteLine("loaded");
         }
+
+        private void image1_ImageFailed(object sender, ExceptionRoutedEventArgs e)
+        {
+
+        }
+
+        private void image1_MouseMove(object sender, MouseEventArgs e)
+        {
+            Console.WriteLine("move");
+        }
+
+        private void image1_MouseEnter(object sender, MouseEventArgs e)
+        {
+            Console.WriteLine("enter");
+        }
+
+        private void button1_MouseEnter(object sender, MouseEventArgs e)
+        {
+            Console.WriteLine("wchodze");
+        }
+
+        private void button1_MouseLeave(object sender, MouseEventArgs e)
+        {
+            Console.WriteLine("wychodze");
+        }
+
+        private void button1_MouseMove(object sender, MouseEventArgs e)
+        {
+            textBlock1.Text = "x: "+e.GetPosition(button1).X + Environment.NewLine+ "y:" + e.GetPosition(button1).Y;
+        }
+
+
     }
 }

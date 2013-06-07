@@ -6,11 +6,11 @@
     xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d" d:DesignWidth="480" d:DesignHeight="768"
+    mc:Ignorable="d" d:DesignWidth="728" d:DesignHeight="480"
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
     Foreground="{StaticResource PhoneForegroundBrush}"
-    SupportedOrientations="Portrait" Orientation="Portrait"
+    SupportedOrientations="Landscape" Orientation="Landscape"
     shell:SystemTray.IsVisible="True">
 
     <!--LayoutRoot is the root grid where all page content is placed-->
@@ -27,7 +27,14 @@
         </StackPanel>
 
         <!--ContentPanel - place additional content here-->
-        <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0"></Grid>
+        <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
+            <Button Height="200" HorizontalAlignment="Left" Margin="502,123,0,0" Name="button1" VerticalAlignment="Top" Width="200" MouseEnter="button1_MouseEnter" MouseLeave="button1_MouseLeave" MouseMove="button1_MouseMove" BorderThickness="0">
+                <Button.Background>
+                    <ImageBrush ImageSource="/RaceGamePhone;component/Resources/circle_orange.png" />
+                </Button.Background>
+            </Button>
+            <TextBlock Height="102" HorizontalAlignment="Left" Margin="157,102,0,0" Name="textBlock1" Text="TextBlock" VerticalAlignment="Top" Width="117" />
+        </Grid>
     </Grid>
  
     <!--Sample code showing usage of ApplicationBar-->
