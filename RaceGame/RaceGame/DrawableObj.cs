@@ -12,7 +12,7 @@ using FarseerPhysics.Common.PolygonManipulation;
 
 namespace RaceGame
 {
-    class DrawableObj
+    public class DrawableObj
     {
         public Vector2 origin { get; protected set; }
         private Body body { get; set; }

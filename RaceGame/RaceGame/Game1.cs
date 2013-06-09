@@ -21,7 +21,7 @@ namespace RaceGame
         SpriteBatch spriteBatch;
 
         World world;
-        Car car;
+        public Car car;
         DrawableObj[] elements;
 
         Texture2D carTexture, lineTexture, elementsTexture;
@@ -104,10 +104,10 @@ namespace RaceGame
                 this.Exit();
 
             KeyboardState keyboard = Keyboard.GetState();
-            car.inputState.acceleration = keyboard.IsKeyDown(Keys.Up) ? 1 : 0;
-            car.inputState.breakVal = keyboard.IsKeyDown(Keys.Down) ? 1 : 0;
-            car.inputState.steer = keyboard.IsKeyDown(Keys.Left) ? -1 : 0;
-            car.inputState.steer += keyboard.IsKeyDown(Keys.Right) ? 1 : 0;
+            //car.inputState.acceleration = keyboard.IsKeyDown(Keys.Up) ? 1 : 0;
+            //car.inputState.breakVal = keyboard.IsKeyDown(Keys.Down) ? 1 : 0;
+            //car.inputState.steer = keyboard.IsKeyDown(Keys.Left) ? -1 : 0;
+            //car.inputState.steer += keyboard.IsKeyDown(Keys.Right) ? 1 : 0;
             if (keyboard.IsKeyDown(Keys.Escape))
                 this.Exit();
 

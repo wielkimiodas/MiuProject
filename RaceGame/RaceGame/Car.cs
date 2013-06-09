@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace RaceGame
 {
-    class Car : DrawableObj
+    public class Car : DrawableObj
     {
         struct SpeedInfo
         {

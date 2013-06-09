@@ -10,9 +10,14 @@ namespace RaceGame.Server
     {
         public bool DoSteer(InputState state)
         {
-
-            Console.WriteLine("accel: " + state.acceleration + "\tbreak: " + state.breakVal + "\tsteer: " + state.steer);            
-            return true;
+            var car = Program.game1.car;
+            if (car != null)
+            {
+                car.inputState = state;
+                Console.WriteLine("accel: " + state.acceleration + "\tbreak: " + state.breakVal + "\tsteer: " + state.steer);
+                return true;
+            }
+            return false;
         }
     }
 }

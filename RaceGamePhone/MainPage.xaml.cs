@@ -25,7 +25,41 @@ namespace RaceGamePhone
         public MainPage()
         {
             InitializeComponent();
+            Touch.FrameReported += new TouchFrameEventHandler(Touch_FrameReported);
+
             //InitAccelerometer();
+        }
+
+        void Touch_FrameReported(object sender, TouchFrameEventArgs e)
+        {
+            TouchPoint primaryTouchPoint = e.GetPrimaryTouchPoint(null);
+
+
+            TouchPointCollection touchPoints = e.GetTouchPoints(null);
+
+
+            foreach (TouchPoint tp in touchPoints)
+            {
+                if (tp.Action == TouchAction.Down)
+                {
+                    var t = TransformToVisual(btnAcceleration);
+                    var absposition = t.Transform(new Point(0,0));
+                    absposition.X = Math.Abs(absposition.X);
+                    absposition.Y = Math.Abs(absposition.Y);
+                    if (tp.Position.X > absposition.X && tp.Position.Y > absposition.Y)
+                    {
+                        Debug.WriteLine("jestem tu:" + tp.Position.X + ", " + tp.Position.Y);
+
+                    }
+                    else
+                    {
+                        Debug.WriteLine("nie");
+                    }
+
+                    
+                }
+
+            }
         }
 
         Accelerometer accelSensor;
@@ -48,7 +82,7 @@ namespace RaceGamePhone
                 input = new InputState();
                 input.acceleration = 1;
                 input.breakVal = 0;
-                input.steer = (float)e.Y;
+                input.steer = -(float)e.Y;
 
                 client.DoSteerAsync(input);
             }
@@ -60,33 +94,36 @@ namespace RaceGamePhone
 
         private void btnBreak_MouseMove(object sender, MouseEventArgs e)
         {
-            textBlock1.Text = "A=> x: " + e.GetPosition(btnBreak).X + Environment.NewLine + "y:" + e.GetPosition(btnBreak).Y;
+            tbBrakeInfo.Text = "A=> x: " + e.GetPosition(btnBreak).X + Environment.NewLine + "y:" + e.GetPosition(btnBreak).Y;
         }
 
         private void btnAcceleration_MouseMove(object sender, MouseEventArgs e)
         {
-            textBlock1.Text = "B=> x: " + e.GetPosition(btnAcceleration).X + Environment.NewLine + "y:" + e.GetPosition(btnAcceleration).Y;
+            tbAccelInfo.Text = "B=> x: " + e.GetPosition(btnAcceleration).X + Environment.NewLine + "y:" + e.GetPosition(btnAcceleration).Y;
         }
 
         private void btnConnect_Click(object sender, RoutedEventArgs e)
         {
+
+            //NavigationService.Navigate(new Uri("/ConfigurationPage.xaml", UriKind.Relative));
+
             if (client == null)
             {
-                string ip = tbAddress.Text;
+                string ip = "192.168.0.15";//tbAddress.Text;
                 address = "http://" + ip + ":8001/MiuWebService";
                 try
                 {
-                    
+
                     client = new SteeringReceiverClient(new BasicHttpBinding(), new EndpointAddress(address));
                     isStared = true;
-                    tbStatus.Text = "Connected";
+                    //tbStatus.Text = "Connected";
                     InitAccelerometer();
 
                 }
                 catch (Exception)
                 {
                     isStared = false;
-                    tbStatus.Text = "Connection could not be established";
+                    //tbStatus.Text = "Connection could not be established";
                 }
 
                 client.DoSteerCompleted += new EventHandler<DoSteerCompletedEventArgs>(client_DoSteerCompleted);
