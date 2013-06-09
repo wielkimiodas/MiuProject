@@ -23,17 +23,24 @@
         <!--TitlePanel contains the name of the application and page title-->
         <StackPanel x:Name="TitlePanel" Grid.Row="0" Margin="12,17,0,28">
             <TextBlock x:Name="ApplicationTitle" Text="MY APPLICATION" Style="{StaticResource PhoneTextNormalStyle}"/>
-            <TextBlock x:Name="PageTitle" Text="page name" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
         </StackPanel>
 
         <!--ContentPanel - place additional content here-->
         <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
-            <Button Height="200" HorizontalAlignment="Left" Margin="502,123,0,0" Name="button1" VerticalAlignment="Top" Width="200" MouseEnter="button1_MouseEnter" MouseLeave="button1_MouseLeave" MouseMove="button1_MouseMove" BorderThickness="0">
+            <Button Height="200" HorizontalAlignment="Left" Margin="504,113,0,0" Name="btnAcceleration" VerticalAlignment="Top" Width="200" BorderThickness="0" MouseMove="btnAcceleration_MouseMove">
                 <Button.Background>
                     <ImageBrush ImageSource="/RaceGamePhone;component/Resources/circle_orange.png" />
                 </Button.Background>
             </Button>
-            <TextBlock Height="102" HorizontalAlignment="Left" Margin="157,102,0,0" Name="textBlock1" Text="TextBlock" VerticalAlignment="Top" Width="117" />
+            <TextBlock Height="154" HorizontalAlignment="Left" Margin="259,113,0,0" Name="textBlock1" Text="" VerticalAlignment="Top" Width="191" />
+            <Button Height="200" HorizontalAlignment="Left" Margin="12,113,0,0" Name="btnBreak" VerticalAlignment="Top" Width="200" BorderThickness="0" MouseMove="btnBreak_MouseMove">
+                <Button.Background>
+                    <ImageBrush ImageSource="/RaceGamePhone;component/Resources/brake.png" />
+                </Button.Background>
+            </Button>
+            <TextBlock Height="34" HorizontalAlignment="Left" Margin="313,6,0,0" Name="tbStatus" Text="Not connected" VerticalAlignment="Top" Width="391" />
+            <TextBox Height="72" HorizontalAlignment="Left" Margin="0,46,0,0" Name="tbAddress" Text="192.168.0.15" VerticalAlignment="Top" Width="460" />
+            <Button Content="Connect" Height="72" HorizontalAlignment="Left" Margin="466,46,0,0" Name="btnConnect" VerticalAlignment="Top" Width="160" Click="btnConnect_Click" />
         </Grid>
     </Grid>
  

@@ -12,6 +12,9 @@ namespace RaceGame
         {
             using (Game1 game = new Game1())
             {
+                Server.GameServer s= new Server.GameServer();
+                string r = s.LaunchServerInstance();
+                Console.WriteLine(r);
                 game.Run();
             }
         }
