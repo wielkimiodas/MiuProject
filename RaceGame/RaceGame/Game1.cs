@@ -23,14 +23,19 @@ namespace RaceGame
         World world;
         public Car car1;
         public Car car2;
-        DrawableObj[] cones;
-        DrawableObj[] tires;
+        PhysicObj[] cones;
+        PhysicObj[] tires;
 
-        List<DrawableObj> objects = new List<DrawableObj>();
+        List<DrawableObject> objects = new List<DrawableObject>();
 
-        Texture2D carTexture1, carTexture2, lineTexture, coneTexture, tireTexture;
+        Texture2D carTexture1, carTexture2, coneTexture, tireTexture, blockTexture;
+        public static Texture2D lineTexture;
+
+        Texture2D trackTex;
 
         SpriteFont Font1;
+
+        Camera camera1, camera2;
 
         public Game1()
         {
@@ -46,7 +51,10 @@ namespace RaceGame
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
+            GraphicsDevice.RasterizerState = new RasterizerState()
+            {
+                ScissorTestEnable = true
+            };
 
             base.Initialize();
         }
@@ -65,39 +73,55 @@ namespace RaceGame
             lineTexture = Content.Load<Texture2D>("line");
             coneTexture = Content.Load<Texture2D>("cone");
             tireTexture = Content.Load<Texture2D>("tire");
+            blockTexture = Content.Load<Texture2D>("block");
+            trackTex = Content.Load<Texture2D>("track");
 
             world = new World(Vector2.Zero);
             
             car1 = new Car(world, carTexture1, new Vector2(0.1f, 0.1f), 1);
             car1.Restitution = 0.1f;
             car1.Rotation = (float)Math.PI / 2;
+            car1.level = 0.1f;
             objects.Add(car1);
 
             car2 = new Car(world, carTexture2, new Vector2(0.1f, 0.1f), 1);
             car2.Restitution = 0.1f;
             car2.Rotation = (float)Math.PI / 2;
             car2.Position = new Vector2(-100, 0);
+            car2.level = 0.1f;
             objects.Add(car2);
 
-            cones = new DrawableObj[10];
+            cones = new PhysicObj[10];
             for (int i = 1; i <= cones.Length; i++)
             {
-                cones[i - 1] = new DrawableObj(world, coneTexture, new Vector2(0.2f, 0.2f), 0.8f);
+                cones[i - 1] = new PhysicObj(world, coneTexture, new Vector2(0.2f, 0.2f), 0.8f);
                 cones[i - 1].Position = new Vector2(75 * i, 0);
                 cones[i - 1].Restitution = 0.1f;
                 cones[i - 1].body.LinearDamping = 5.0f;
                 objects.Add(cones[i - 1]);
             }
 
-            tires = new DrawableObj[10];
+            tires = new PhysicObj[10];
             for (int i = 1; i <= tires.Length; i++)
             {
-                tires[i - 1] = new DrawableObj(world, tireTexture, new Vector2(0.5f, 0.5f), 1);
+                tires[i - 1] = new PhysicObj(world, tireTexture, new Vector2(0.5f, 0.5f), 1);
                 tires[i - 1].Position = new Vector2(75 * i, 100);
                 tires[i - 1].Restitution = 0.8f;
                 tires[i - 1].body.LinearDamping = 8.0f;
                 objects.Add(tires[i - 1]);
             }
+
+            for (int i = 0; i < 100; i++)
+            {
+                PhysicObj obj = new PhysicObj(world, blockTexture, new Vector2(10, 10), 1);
+                obj.Position = new Vector2(-100 - i * 100, -100);
+                obj.body.BodyType = BodyType.Static;
+                obj.body.Restitution = 0.0f;
+                objects.Add(obj);
+            }
+
+            DrawableObject o = new DrawableObject(trackTex, Vector2.One, Vector2.Zero, 0);
+            objects.Add(o);
 
             /*for (int i = 0; i < 10; i++)
             {
@@ -105,6 +129,14 @@ namespace RaceGame
                 body.Position = new Vector2(50*(i+1), 0);
                 body.BodyType = BodyType.Dynamic;
             }*/
+
+            List<Car> cars = new List<Car>();
+            cars.Add(car1);
+            camera1 = new Camera(cars, graphics, GraphicsDevice, new Rectangle(0, 0, graphics.PreferredBackBufferWidth/2,graphics.PreferredBackBufferHeight));
+
+            cars = new List<Car>();
+            cars.Add(car2);
+            camera2 = new Camera(cars, graphics, GraphicsDevice, new Rectangle(graphics.PreferredBackBufferWidth/2, 0, graphics.PreferredBackBufferWidth/2,graphics.PreferredBackBufferHeight));
 
             Font1 = Content.Load<SpriteFont>("Font1");
         }
@@ -141,7 +173,10 @@ namespace RaceGame
             car1.update(gameTime.ElapsedGameTime);
             car2.update(gameTime.ElapsedGameTime);
             world.Step((float)gameTime.ElapsedGameTime.TotalSeconds);
-            
+
+            camera1.Update(gameTime.ElapsedGameTime);
+            camera2.Update(gameTime.ElapsedGameTime);
+
             base.Update(gameTime);
         }
 
@@ -151,11 +186,11 @@ namespace RaceGame
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            DrawableObj target = car2;
+            //DrawableObj target = car2;
 
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
+            //spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
 
             const int N = 5;
             /*for (int i = 0; i <= N; i++)
@@ -175,19 +210,22 @@ namespace RaceGame
                 spriteBatch.Draw(el.texture, (el.Position - target.Position) + new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2), null, Color.White, el.Rotation, el.origin, el.scale, SpriteEffects.None, 0.0f);
             }*/
 
-            foreach(DrawableObj obj in objects)
-                spriteBatch.Draw(obj.texture, (obj.Position - target.Position) + new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2), null, Color.White, obj.Rotation, obj.origin, obj.scale, SpriteEffects.None, 0.0f);
+            /*foreach(DrawableObj obj in objects)
+                spriteBatch.Draw(obj.texture, (obj.Position - target.Position) + new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2), null, Color.White, obj.Rotation, obj.origin, obj.scale, SpriteEffects.None, obj.level);*/
 
-            spriteBatch.DrawString(Font1, target.LinearVelocity.Length().ToString("0.00"), new Vector2(0, 0), Color.White);
+            camera1.Draw(spriteBatch, objects);
+            camera2.Draw(spriteBatch, objects);
+
+            /*spriteBatch.DrawString(Font1, target.LinearVelocity.Length().ToString("0.00"), new Vector2(0, 0), Color.White);
             //spriteBatch.DrawString(Font1, car.lastSideSpeed.ToString("0.00"), new Vector2(100, 0), Color.White);
             spriteBatch.DrawString(Font1, (target.Position).X.ToString("0.00"), new Vector2(0, 50), Color.White);
-            spriteBatch.DrawString(Font1, (target.Position).Y.ToString("0.00"), new Vector2(100, 50), Color.White);
+            spriteBatch.DrawString(Font1, (target.Position).Y.ToString("0.00"), new Vector2(100, 50), Color.White);*/
 
             /*car.position.X = graphics.PreferredBackBufferWidth / 2;
             car.position.Y = graphics.PreferredBackBufferHeight / 2;
             car.rotation = gameState.rotation;
             car.draw(spriteBatch);*/
-            spriteBatch.End();
+            //spriteBatch.End();
 
             base.Draw(gameTime);
         }

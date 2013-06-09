@@ -1096,7 +1096,7 @@ namespace FarseerPhysics.Dynamics
 
                         BodyType typeA = bA.BodyType;
                         BodyType typeB = bB.BodyType;
-                        Debug.Assert(typeA == BodyType.Dynamic || typeB == BodyType.Dynamic);
+                        //Debug.Assert(typeA == BodyType.Dynamic || typeB == BodyType.Dynamic);
 
                         bool awakeA = bA.Awake && typeA != BodyType.Static;
                         bool awakeB = bB.Awake && typeB != BodyType.Static;

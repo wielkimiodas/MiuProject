@@ -12,12 +12,9 @@ using FarseerPhysics.Common.PolygonManipulation;
 
 namespace RaceGame
 {
-    public class DrawableObj
+    public class PhysicObj : DrawableObject
     {
-        public Vector2 origin { get; protected set; }
         public Body body { get; set; }
-        public Texture2D texture { get; protected set; }
-        public Vector2 scale { get; protected set; }
 
         private const int MULTIPLER = 100;
 
@@ -33,7 +30,7 @@ namespace RaceGame
             }
         }
 
-        public Vector2 Position
+        public override Vector2 Position
         {
             get
             {
@@ -41,11 +38,12 @@ namespace RaceGame
             }
             set
             {
-                body.Position = value / MULTIPLER;
+                if (body != null)
+                    body.Position = value / MULTIPLER;
             }
         }
 
-        public float Rotation
+        public override float Rotation
         {
             get
             {
@@ -53,7 +51,8 @@ namespace RaceGame
             }
             set
             {
-                body.Rotation = value;
+                if (body != null)
+                    body.Rotation = value;
             }
         }
 
@@ -81,13 +80,14 @@ namespace RaceGame
             }
         }
 
-        public DrawableObj(World world, Texture2D texture)
+        public PhysicObj(World world, Texture2D texture)
             : this(world, texture, Vector2.One) { }
 
-        public DrawableObj(World world, Texture2D texture, Vector2 scale)
+        public PhysicObj(World world, Texture2D texture, Vector2 scale)
             : this(world, texture, scale, 1f) { }
 
-        public DrawableObj(World world, Texture2D texture, Vector2 scale, float density)
+        public PhysicObj(World world, Texture2D texture, Vector2 scale, float density)
+            : base(texture, scale, Vector2.Zero, 0)
         {
             this.texture = texture;
             this.scale = scale;
@@ -122,8 +122,6 @@ namespace RaceGame
                         maxX = vec.X;
                 }
             }
-
-            Console.WriteLine(minX + "\t" + maxX);
 
             body = BodyFactory.CreateCompoundPolygon(world, list, density, BodyType.Dynamic);
             body.BodyType = BodyType.Dynamic;

@@ -9,9 +9,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace RaceGame
 {
-    public class Car : DrawableObj
+    public class Car : PhysicObj
     {
-        struct SpeedInfo
+        public struct SpeedInfo
         {
             public Vector2 speed;
             public Vector2 sideSpeed;
@@ -53,7 +53,7 @@ namespace RaceGame
             if (time.TotalSeconds <= 0)
                 return;
 
-            SpeedInfo speedInfo = getSpeed(LinearVelocity, Rotation);
+            SpeedInfo speedInfo = getSpeed();
 
             // rzeczywiste odchylenie kol od srodka
             float realSteer = inputState.steer * maxSteer;
@@ -132,20 +132,20 @@ namespace RaceGame
             LinearVelocity = linearVelocitySign * getVelocityVect(speedInfo.speed.Length(), Rotation + angularVelocity) + speedInfo.sideSpeed;
         }
 
-        SpeedInfo getSpeed(Vector2 v, float rotation)
+        public SpeedInfo getSpeed()
         {
-            Vector2 direction = new Vector2((float)Math.Cos(rotation), (float)Math.Sin(rotation));
+            Vector2 direction = new Vector2((float)Math.Cos(Rotation), (float)Math.Sin(Rotation));
             float angleCos = 0;
 
-            if (v.Length() != 0 && direction.Length() != 0)
-                angleCos = getAngleCos(v, direction);
+            if (LinearVelocity.Length() != 0 && direction.Length() != 0)
+                angleCos = getAngleCos(LinearVelocity, direction);
 
-            Vector2 speed = direction * angleCos * v.Length();
+            Vector2 speed = direction * angleCos * LinearVelocity.Length();
 
             return new SpeedInfo()
             {
                 speed = speed,
-                sideSpeed = v - speed,
+                sideSpeed = LinearVelocity - speed,
                 direction = direction,
                 angleCos = angleCos
             };
