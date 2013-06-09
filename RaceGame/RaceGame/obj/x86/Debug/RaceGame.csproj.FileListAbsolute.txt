@@ -1,6 +1,0 @@
-V:\MiuProject\RaceGame\RaceGame\bin\x86\Debug\RaceGame.exe
-V:\MiuProject\RaceGame\RaceGame\bin\x86\Debug\RaceGame.pdb
-V:\MiuProject\RaceGame\RaceGame\obj\x86\Debug\ResolveAssemblyReference.cache
-V:\MiuProject\RaceGame\RaceGame\obj\x86\Debug\Microsoft.Xna.Framework.RuntimeProfile.txt
-V:\MiuProject\RaceGame\RaceGame\obj\x86\Debug\RaceGame.exe
-V:\MiuProject\RaceGame\RaceGame\obj\x86\Debug\RaceGame.pdb
