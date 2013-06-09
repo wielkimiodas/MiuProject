@@ -15,7 +15,7 @@ namespace RaceGame
     public class DrawableObj
     {
         public Vector2 origin { get; protected set; }
-        private Body body { get; set; }
+        public Body body { get; set; }
         public Texture2D texture { get; protected set; }
         public Vector2 scale { get; protected set; }
 

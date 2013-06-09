@@ -25,6 +25,8 @@ namespace RaceGame
         
         // minimalna predkosc boczna, kazda mniejsza bedzie obcinana
         const float minSideVelocity = 0.1f;
+        // zwalnianie predkosci bocznej
+        const float sideBreaking = 80f;
         // maksymalna predkosc do przodu
         const float maxForwardSpeed = 500;
         // maksymalna predkosc do tylu
@@ -34,7 +36,9 @@ namespace RaceGame
         // hamowanie samochodu
         const float breaking = 200f;
         // hamowanie na luzie
-        const float dragBreaking = 1f;
+        const float dragBreaking = 50f;
+        // minimalna predkosc do przodu / tylu
+        const float minVelocity = 1f;
 
         public Car(World world, Texture2D texture, Vector2 scale, float density)
             : base(world, texture, scale, density)
@@ -80,13 +84,17 @@ namespace RaceGame
                     }
                 }
             }
-            else
+            else if (speedInfo.speed.Length() > minVelocity)
             {
-                speedInfo.speed -= speedInfo.direction * (float)time.TotalSeconds * dragBreaking;
+                int sign = getLinearVelocitySign(speedInfo.speed, speedInfo.direction);
+                speedInfo.speed -= sign * speedInfo.direction * (float)time.TotalSeconds * dragBreaking;
+                if (getLinearVelocitySign(speedInfo.speed, speedInfo.direction) != sign)
+                    speedInfo.speed = Vector2.Zero;
             }
+            else
+                speedInfo.speed = Vector2.Zero;
 
-            int linearVelocitySign = Math.Sign(speedInfo.speed.X) == Math.Sign(speedInfo.direction.X)
-                    && Math.Sign(speedInfo.speed.Y) == Math.Sign(speedInfo.direction.Y) ? 1 : -1;
+            int linearVelocitySign = getLinearVelocitySign(speedInfo.speed, speedInfo.direction);
 
             // odleglosc, jaka przebedzie samochod
             Vector2 distance = speedInfo.speed * (float)time.TotalSeconds;
@@ -112,7 +120,11 @@ namespace RaceGame
             }
 
             if (speedInfo.sideSpeed.Length() > minSideVelocity)
-                speedInfo.sideSpeed *= Math.Max(0, 1 - (float)time.TotalSeconds);
+            {
+                Vector2 sideDirection = speedInfo.sideSpeed;
+                sideDirection.Normalize();
+                speedInfo.sideSpeed -= sideDirection * (float)time.TotalSeconds * sideBreaking;
+            }
             else
                 speedInfo.sideSpeed = Vector2.Zero;
 
@@ -147,6 +159,12 @@ namespace RaceGame
         public static float getAngleCos(Vector2 v1, Vector2 v2)
         {
             return (v1.X * v2.X + v1.Y * v2.Y) / (v1.Length() * v2.Length());
+        }
+
+        static int getLinearVelocitySign(Vector2 speed, Vector2 direction)
+        {
+            return Math.Sign(speed.X) == Math.Sign(direction.X)
+                    && Math.Sign(speed.Y) == Math.Sign(direction.Y) ? 1 : -1;
         }
     }
 }

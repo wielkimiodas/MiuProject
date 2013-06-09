@@ -10,7 +10,7 @@ namespace RaceGame.Server
     {
         public bool DoSteer(InputState state)
         {
-            var car = Program.game1.car;
+            var car = Program.game1.car1;
             if (car != null)
             {
                 car.inputState = state;

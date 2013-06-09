@@ -21,10 +21,14 @@ namespace RaceGame
         SpriteBatch spriteBatch;
 
         World world;
-        public Car car;
-        DrawableObj[] elements;
+        public Car car1;
+        public Car car2;
+        DrawableObj[] cones;
+        DrawableObj[] tires;
 
-        Texture2D carTexture, lineTexture, elementsTexture;
+        List<DrawableObj> objects = new List<DrawableObj>();
+
+        Texture2D carTexture1, carTexture2, lineTexture, coneTexture, tireTexture;
 
         SpriteFont Font1;
 
@@ -56,20 +60,43 @@ namespace RaceGame
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            carTexture = Content.Load<Texture2D>("car");
+            carTexture1 = Content.Load<Texture2D>("car1");
+            carTexture2 = Content.Load<Texture2D>("car2");
             lineTexture = Content.Load<Texture2D>("line");
-            elementsTexture = Content.Load<Texture2D>("image");
+            coneTexture = Content.Load<Texture2D>("cone");
+            tireTexture = Content.Load<Texture2D>("tire");
 
             world = new World(Vector2.Zero);
-            car = new Car(world, carTexture, new Vector2(0.1f, 0.1f), 1);
-            car.Restitution = 0.1f;
+            
+            car1 = new Car(world, carTexture1, new Vector2(0.1f, 0.1f), 1);
+            car1.Restitution = 0.1f;
+            car1.Rotation = (float)Math.PI / 2;
+            objects.Add(car1);
 
-            elements = new DrawableObj[10];
-            for (int i = 1; i <= elements.Length; i++)
+            car2 = new Car(world, carTexture2, new Vector2(0.1f, 0.1f), 1);
+            car2.Restitution = 0.1f;
+            car2.Rotation = (float)Math.PI / 2;
+            car2.Position = new Vector2(-100, 0);
+            objects.Add(car2);
+
+            cones = new DrawableObj[10];
+            for (int i = 1; i <= cones.Length; i++)
             {
-                elements[i - 1] = new DrawableObj(world, elementsTexture, new Vector2(0.51f, 0.51f), 1);
-                elements[i - 1].Position = new Vector2(75 * i, 0);
-                elements[i - 1].Restitution = 0.1f;
+                cones[i - 1] = new DrawableObj(world, coneTexture, new Vector2(0.2f, 0.2f), 0.8f);
+                cones[i - 1].Position = new Vector2(75 * i, 0);
+                cones[i - 1].Restitution = 0.1f;
+                cones[i - 1].body.LinearDamping = 5.0f;
+                objects.Add(cones[i - 1]);
+            }
+
+            tires = new DrawableObj[10];
+            for (int i = 1; i <= tires.Length; i++)
+            {
+                tires[i - 1] = new DrawableObj(world, tireTexture, new Vector2(0.5f, 0.5f), 1);
+                tires[i - 1].Position = new Vector2(75 * i, 100);
+                tires[i - 1].Restitution = 0.8f;
+                tires[i - 1].body.LinearDamping = 8.0f;
+                objects.Add(tires[i - 1]);
             }
 
             /*for (int i = 0; i < 10; i++)
@@ -88,7 +115,7 @@ namespace RaceGame
         /// </summary>
         protected override void UnloadContent()
         {
-            carTexture.Dispose();
+            carTexture1.Dispose();
             lineTexture.Dispose();
         }
 
@@ -104,20 +131,17 @@ namespace RaceGame
                 this.Exit();
 
             KeyboardState keyboard = Keyboard.GetState();
-            //car.inputState.acceleration = keyboard.IsKeyDown(Keys.Up) ? 1 : 0;
-            //car.inputState.breakVal = keyboard.IsKeyDown(Keys.Down) ? 1 : 0;
-            //car.inputState.steer = keyboard.IsKeyDown(Keys.Left) ? -1 : 0;
-            //car.inputState.steer += keyboard.IsKeyDown(Keys.Right) ? 1 : 0;
+            car2.inputState.acceleration = keyboard.IsKeyDown(Keys.Up) ? 1 : 0;
+            car2.inputState.breakVal = keyboard.IsKeyDown(Keys.Down) ? 1 : 0;
+            car2.inputState.steer = keyboard.IsKeyDown(Keys.Left) ? -1 : 0;
+            car2.inputState.steer += keyboard.IsKeyDown(Keys.Right) ? 1 : 0;
             if (keyboard.IsKeyDown(Keys.Escape))
                 this.Exit();
 
-            car.update(gameTime.ElapsedGameTime);
-            //Console.WriteLine("1:\t" + elements[0].Position + "\t" + car.Position);
+            car1.update(gameTime.ElapsedGameTime);
+            car2.update(gameTime.ElapsedGameTime);
             world.Step((float)gameTime.ElapsedGameTime.TotalSeconds);
-            //Console.WriteLine("2:\t" + elements[0].Position + "\t" + car.Position);
-
-            //Console.WriteLine(String.Format("{0}\t{1}\t{2}\t{3}\t{4}\t{5}", car.inputState.acceleration, car.inputState.breakVal, car.inputState.steer, car.body.Position, car.body.LinearVelocity, car.body.AngularVelocity));
-
+            
             base.Update(gameTime);
         }
 
@@ -127,6 +151,8 @@ namespace RaceGame
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
+            DrawableObj target = car2;
+
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
@@ -139,18 +165,23 @@ namespace RaceGame
                 spriteBatch.Draw(lineTexture, new Vector2(0, i * size - (int)car.Position.Y % size), null, Color.White, 0, Vector2.Zero, new Vector2(graphics.PreferredBackBufferWidth, 1), SpriteEffects.None, 0.1f);
             }*/
 
-            spriteBatch.Draw(car.texture, new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2), null, Color.White, car.Rotation, car.origin, car.scale, SpriteEffects.None, 0.0f);
+            /*spriteBatch.Draw(car1.texture, (car1.Position - target.Position) + new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2), null, Color.White, car1.Rotation, car1.origin, car1.scale, SpriteEffects.None, 0.0f);
+            spriteBatch.Draw(car2.texture, (car2.Position - target.Position) + new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2), null, Color.White, car2.Rotation, car2.origin, car2.scale, SpriteEffects.None, 0.0f);
 
-            for (int i = 0; i < elements.Length; i++)
+
+            for (int i = 0; i < cones.Length; i++)
             {
-                DrawableObj el = elements[i];
-                spriteBatch.Draw(el.texture, (el.Position - car.Position) + new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2), null, Color.White, el.Rotation, el.origin, el.scale, SpriteEffects.None, 0.0f);
-            }
+                DrawableObj el = cones[i];
+                spriteBatch.Draw(el.texture, (el.Position - target.Position) + new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2), null, Color.White, el.Rotation, el.origin, el.scale, SpriteEffects.None, 0.0f);
+            }*/
 
-            spriteBatch.DrawString(Font1, car.LinearVelocity.Length().ToString("0.00"), new Vector2(0, 0), Color.White);
+            foreach(DrawableObj obj in objects)
+                spriteBatch.Draw(obj.texture, (obj.Position - target.Position) + new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2), null, Color.White, obj.Rotation, obj.origin, obj.scale, SpriteEffects.None, 0.0f);
+
+            spriteBatch.DrawString(Font1, target.LinearVelocity.Length().ToString("0.00"), new Vector2(0, 0), Color.White);
             //spriteBatch.DrawString(Font1, car.lastSideSpeed.ToString("0.00"), new Vector2(100, 0), Color.White);
-            spriteBatch.DrawString(Font1, (car.Position).X.ToString("0.00"), new Vector2(0, 50), Color.White);
-            spriteBatch.DrawString(Font1, (car.Position).Y.ToString("0.00"), new Vector2(100, 50), Color.White);
+            spriteBatch.DrawString(Font1, (target.Position).X.ToString("0.00"), new Vector2(0, 50), Color.White);
+            spriteBatch.DrawString(Font1, (target.Position).Y.ToString("0.00"), new Vector2(100, 50), Color.White);
 
             /*car.position.X = graphics.PreferredBackBufferWidth / 2;
             car.position.Y = graphics.PreferredBackBufferHeight / 2;
