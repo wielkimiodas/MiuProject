@@ -31,9 +31,9 @@ namespace RaceGame
 
         Texture2D trackTex, trackStartTex, turnTex, grassTex;
 
-        SpriteFont Font1;
+        public static SpriteFont Font1;
 
-        Camera camera1, camera2;
+        List<Camera> cameras = new List<Camera>();
 
         public Game1()
         {
@@ -53,6 +53,13 @@ namespace RaceGame
             {
                 ScissorTestEnable = true
             };
+
+            /*graphics.PreferredBackBufferWidth = 1366;
+            graphics.PreferredBackBufferHeight = 768;
+            graphics.ToggleFullScreen();*/
+            graphics.PreferredBackBufferWidth = 640;
+            graphics.PreferredBackBufferHeight = 480;
+            graphics.ApplyChanges();
 
             base.Initialize();
         }
@@ -94,47 +101,65 @@ namespace RaceGame
             car2.level = 0.1f;
             objects.Add(car2);
 
+            const int N = 5;
+            int dist = 200 / N;
             List<Vector2> conesPos = new List<Vector2>();
-            conesPos.Add(new Vector2(500, 500));
-            for(int i = 0; i < 10; i++)
-                for(int j = 0; j < 10 - i; j++)
-                    conesPos.Add(new Vector2(500 + 20 * (i + 1), 500 + 20 * (j + 1)));
+            for(int i = 0; i < N; i++)
+                for(int j = 0; j < N - i; j++)
+                    if (i != 0 || j != 0)
+                        conesPos.Add(new Vector2(500 + dist * i, 500 + dist * j));
 
-            conesPos.Add(new Vector2(500, 500));
-            for (int i = 0; i < 10; i++)
-                for (int j = 0; j < 10 - i; j++)
-                    conesPos.Add(new Vector2(500 + 20 * (i + 1), 500 + 20 * (j + 1)));
-            
-            Vector2[] cones = new Vector2[]
-                {
-                    new Vector2(500, 500),
-                    new Vector2(525, 500),
-                    new Vector2(550, 500),
-                    new Vector2(575, 500),
-                    new Vector2(600, 500),
-                    new Vector2(500, 525),
-                    new Vector2(500, 550),
-                    new Vector2(500, 575),
-                    new Vector2(500, 600),
-                    
-                    new Vector2(550, 2650),
-                    new Vector2(575, 2650),
-                    new Vector2(550, 2650),
-                    
-                    /*new Vector2(550, 550),
-                    new Vector2(550, 550),
-                    new Vector2(550, 550),
-                    
-                    new Vector2(550, 550),
-                    new Vector2(550, 550),
-                    new Vector2(550, 550),*/
-                };
+            for (int i = 0; i < N; i++)
+                for (int j = 0; j < N - i; j++)
+                    if (i != 0 || j != 0)
+                        conesPos.Add(new Vector2(2100 - dist * i, 500 + dist * j));
+
+            for (int i = 0; i < N; i++)
+                for (int j = 0; j < N - i; j++)
+                    if (i != 0 || j != 0)
+                        conesPos.Add(new Vector2(500 + dist * i, 2500 - dist * j));
+
+            for (int i = 0; i < N; i++)
+                for (int j = 0; j < N - i; j++)
+                    if (i != 0 || j != 0)
+                        conesPos.Add(new Vector2(2100 - dist * i, 2500 - dist * j));
+
             foreach(Vector2 v in conesPos)
             {
                 PhysicObj obj = new PhysicObj(world, coneTexture, new Vector2(0.2f, 0.2f), 0.8f);
                 obj.Position = v;
                 obj.Restitution = 0.1f;
                 obj.body.LinearDamping = 5.0f;
+                obj.level = 0.9f;
+                objects.Add(obj);
+            }
+
+            List<Vector2> tiresPos = new List<Vector2>();
+
+            dist = 50;
+            int minX = 250;
+            int maxX = 2350;
+            int minY = 250;
+            int maxY = 2750;
+
+            for(int x = minX; x <= maxX; x+=dist)
+            {
+                tiresPos.Add(new Vector2(x, minY));
+                tiresPos.Add(new Vector2(x, maxY));
+            }
+
+            for (int y = minY + dist; y < maxY; y += dist)
+            {
+                tiresPos.Add(new Vector2(minX, y));
+                tiresPos.Add(new Vector2(maxX, y));
+            }
+
+            foreach (Vector2 v in tiresPos)
+            {
+                PhysicObj obj = new PhysicObj(world, tireTexture, new Vector2(0.5f, 0.5f), 1);
+                obj.Position = v;
+                obj.Restitution = 0.8f;
+                obj.body.LinearDamping = 8.0f;
                 obj.level = 0.9f;
                 objects.Add(obj);
             }
@@ -210,15 +235,31 @@ namespace RaceGame
 
                     objects.Add(obj);
                 }
-            
+
+            List<Car> cars = null;
+
+            /*
             List<Car> cars = new List<Car>();
             cars.Add(car1);
             cars.Add(car2);
-            camera1 = new Camera(cars, graphics, GraphicsDevice, new Rectangle(0, 0, graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight));
+            cameras.Add(new Camera(cars, graphics, GraphicsDevice, new Rectangle(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight / 2)));
+
+            cars = new List<Car>();
+            cars.Add(car1);
+            cameras.Add(new Camera(cars, graphics, GraphicsDevice, new Rectangle(0, graphics.PreferredBackBufferHeight / 2, graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight/2)));
 
             cars = new List<Car>();
             cars.Add(car2);
-            camera2 = new Camera(cars, graphics, GraphicsDevice, new Rectangle(graphics.PreferredBackBufferWidth/2, 0, graphics.PreferredBackBufferWidth/2,graphics.PreferredBackBufferHeight));
+            cameras.Add(new Camera(cars, graphics, GraphicsDevice, new Rectangle(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2, graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight/2)));
+            */
+
+            cars = new List<Car>();
+            cars.Add(car1);
+            cameras.Add(new Camera(cars, graphics, GraphicsDevice, new Rectangle(0, 0, graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight)));
+
+            cars = new List<Car>();
+            cars.Add(car2);
+            cameras.Add(new Camera(cars, graphics, GraphicsDevice, new Rectangle(graphics.PreferredBackBufferWidth / 2, 0, graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight)));
 
             Font1 = Content.Load<SpriteFont>("Font1");
         }
@@ -254,9 +295,9 @@ namespace RaceGame
             car2.update(gameTime.ElapsedGameTime);
             world.Step((float)gameTime.ElapsedGameTime.TotalSeconds);
 
-            camera1.Update(gameTime.ElapsedGameTime);
-            camera2.Update(gameTime.ElapsedGameTime);
-
+            foreach(Camera camera in cameras)
+                camera.Update(gameTime.ElapsedGameTime);
+            
             base.Update(gameTime);
         }
 
@@ -266,10 +307,10 @@ namespace RaceGame
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(new Color(0, 1f, 0));
+            GraphicsDevice.Clear(new Color(0.3f, 0.3f, 0.3f));
 
-            camera1.Draw(spriteBatch, objects);
-            camera2.Draw(spriteBatch, objects);
+            foreach (Camera camera in cameras)
+                camera.Draw(spriteBatch, objects);
 
             base.Draw(gameTime);
         }

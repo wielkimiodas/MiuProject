@@ -29,29 +29,19 @@ namespace RaceGame
 
         public void Update(TimeSpan time)
         {
-            Vector2 visibleCircle = new Vector2(Camera.visibleCircle);
+            //Vector2 visibleCircle = new Vector2(Camera.visibleCircle);
 
             Vector2 min = new Vector2(float.PositiveInfinity);
             Vector2 max = new Vector2(float.NegativeInfinity);
             center = Vector2.Zero;
             foreach (Car car in cars)
             {
+                Car.SpeedInfo info = car.getSpeed();
+                Vector2 visibleCircle = new Vector2(info.speed.Length());
                 updateMin(ref min, car.Position - visibleCircle);
                 updateMax(ref max, car.Position + visibleCircle);
-
-                Car.SpeedInfo info = car.getSpeed();
-                if (Math.Abs(info.speed.X) > Math.Abs(info.speed.Y))
-                    if (info.speed.X > 0)
-                        updateMinMax(ref min, ref max, car.Position + velocityMul * info.speed.Length() * Vector2.UnitX);
-                    else
-                        updateMinMax(ref min, ref max, car.Position + velocityMul * -info.speed.Length() * Vector2.UnitX);
-                else
-                    if (info.speed.Y > 0)
-                        updateMinMax(ref min, ref max, car.Position + velocityMul * info.speed.Length() * Vector2.UnitY);
-                    else
-                        updateMinMax(ref min, ref max, car.Position + velocityMul * -info.speed.Length() * Vector2.UnitY);
                 
-                center += car.Position / cars.Count;
+                center += (car.Position + info.speed/2) / cars.Count;
             }
 
             if ((max.X - min.X) > (max.Y - min.Y))
@@ -63,7 +53,7 @@ namespace RaceGame
                 zoom = Math.Min(rectangle.Width, rectangle.Height) / (max.Y - min.Y);
             }
 
-            zoom = Math.Min(zoom, 1);
+            zoom = Math.Min(zoom, 2f);
         }
 
         public void Draw(SpriteBatch spriteBatch, List<DrawableObject> objList)
@@ -81,6 +71,11 @@ namespace RaceGame
             {
                 spriteBatch.Draw(obj.texture, zoom * ((obj.Position - center)) + new Vector2(rectangle.X + rectangle.Width / 2, rectangle.Y + rectangle.Height / 2), null, Color.White, obj.Rotation, obj.origin, obj.scale * zoom, SpriteEffects.None, obj.level);
             }
+
+            spriteBatch.DrawString(Game1.Font1, "Current: " + cars[0].getLapTime(), new Vector2(rectangle.X + 10, rectangle.Y + 10), Color.White);
+            spriteBatch.DrawString(Game1.Font1, "Best: " + cars[0].getBestLapTime(), new Vector2(rectangle.X + 10, rectangle.Y + 30), Color.White);
+            spriteBatch.DrawString(Game1.Font1, "Last: " + cars[0].getLastLapTime(), new Vector2(rectangle.X + 10, rectangle.Y + 50), Color.White);
+
             spriteBatch.End();
         }
 

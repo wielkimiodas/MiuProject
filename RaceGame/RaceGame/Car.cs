@@ -22,11 +22,19 @@ namespace RaceGame
         float maxSteer = (float)(Math.PI / 8);
         float d;
         public InputState inputState;
-        
+
+        int currentSector = 3;
+
+        DateTime? lapTime = null;
+        TimeSpan? bestLapTime = null;
+        TimeSpan? lastLapTime = null;
+        Rectangle[] rects;
+        Stack<int> toFinish = new Stack<int>();
+
         // minimalna predkosc boczna, kazda mniejsza bedzie obcinana
         const float minSideVelocity = 0.1f;
         // zwalnianie predkosci bocznej
-        const float sideBreaking = 80f;
+        const float sideBreaking = 120f;
         // maksymalna predkosc do przodu
         const float maxForwardSpeed = 500;
         // maksymalna predkosc do tylu
@@ -44,14 +52,69 @@ namespace RaceGame
             : base(world, texture, scale, density)
         {
             d = texture.Height * scale.Y;
-            //d = 1;
             inputState = new InputState();
+
+            rects = new Rectangle[] {
+                new Rectangle(250, 1500, 1050, 1250),
+                new Rectangle(1300, 1500, 1050, 1250),
+                new Rectangle(1300, 250, 1050, 1250),
+                new Rectangle(250, 250, 1050, 1250),
+            };
+
+            toFinish.Push(0);
+            toFinish.Push(3);
         }
 
         public void update(TimeSpan time)
         {
             if (time.TotalSeconds <= 0)
                 return;
+
+            int index = -1;
+            for (int i = 0; i < rects.Length; i++)
+                if (rects[i].Contains(new Point((int)Position.X, (int)Position.Y)))
+                {
+                    index = i;
+                    break;
+                }
+
+            if (index != currentSector)
+            {
+                int val = toFinish.Pop();
+                if (currentSector == val)
+                {
+                    if (toFinish.Count == 1)
+                    {
+                        int val2 = toFinish.Pop();
+                        if (val2 == index)
+                        {
+                            if (lapTime != null)
+                            {
+                                lastLapTime = DateTime.Now - lapTime;
+                                if (bestLapTime == null || lastLapTime < bestLapTime)
+                                    bestLapTime = lastLapTime;
+                            }
+
+                            lapTime = DateTime.Now;
+
+                            toFinish.Push(0);
+                            toFinish.Push(3);
+                            toFinish.Push(2);
+                            toFinish.Push(1);
+                            toFinish.Push(0);
+                        }
+                        else
+                            toFinish.Push(val2);
+                    }
+                }
+                else
+                {
+                    toFinish.Push(val);
+                    toFinish.Push(index);
+                }
+
+                currentSector = index;
+            }
 
             SpeedInfo speedInfo = getSpeed();
 
@@ -165,6 +228,27 @@ namespace RaceGame
         {
             return Math.Sign(speed.X) == Math.Sign(direction.X)
                     && Math.Sign(speed.Y) == Math.Sign(direction.Y) ? 1 : -1;
+        }
+
+        public String getLapTime()
+        {
+            if (lapTime == null)
+                return "-";
+            return (DateTime.Now - lapTime).ToString().Substring(0, 12).Substring(3);
+        }
+
+        public String getBestLapTime()
+        {
+            if (bestLapTime == null)
+                return "-";
+            return bestLapTime.ToString().Substring(0, 12).Substring(3);
+        }
+
+        public String getLastLapTime()
+        {
+            if (lastLapTime == null)
+                return "-";
+            return lastLapTime.ToString().Substring(0, 12).Substring(3);
         }
     }
 }
