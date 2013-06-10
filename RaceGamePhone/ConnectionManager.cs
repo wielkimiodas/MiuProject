@@ -15,7 +15,7 @@ namespace RaceGamePhone
 {
     public class ConnectionManager
     {
-        private string address = "http://192.168.0.15:8001/test";
+        private string address;// = "http://192.168.0.15:8001/test";
         public bool IsStarted { get; set; }
         SteeringReceiverClient client;
         public MainPage mainPage;

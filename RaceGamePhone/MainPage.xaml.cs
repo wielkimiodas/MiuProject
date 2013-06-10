@@ -62,11 +62,11 @@ namespace RaceGamePhone
                         //btn BREAK
                         tbBrakeInfo.Text = "b-> x: " + absposition.X + " y:" + absposition.Y;
                         double val = Normalize(absposition.X, absposition.Y, btnBreak.ActualHeight);
-                        tbBrakeInfo.Text += " " + val;
+                        tbBrakeInfo.Text += " " + (1- val);
 
                         if (val > 1) btnBreak_MouseLeave(null, null);
 
-                        input.breakVal = (float)val;
+                        input.breakVal = 1 - (float)val;
                     }
                     
                     if (absposition.X < btnAcceleration.ActualHeight
@@ -79,9 +79,9 @@ namespace RaceGamePhone
                         tbAccelInfo.Text = "a-> x: " + absposition.X + " y:" + yp;
 
                         double val = Normalize(absposition.X, yp, btnAcceleration.ActualHeight);
-                        tbAccelInfo.Text += " " + val;
+                        tbAccelInfo.Text += " " + (1-val);
                         if (val > 1) btnAcceleration_MouseLeave(null, null);
-                        input.acceleration = (float)val;
+                        input.acceleration = 1 - (float)val;
                     }
                 }
 
@@ -100,8 +100,11 @@ namespace RaceGamePhone
         {
             
             if (connectionMgr.IsStarted)
-            {                                
-                input.steer = -(float)e.Y;
+            {                                  
+                var steer = -2 * (float)e.Y;
+                if(steer>1) steer=1;
+                if(steer<-1) steer=-1;
+                input.steer = steer;
                 connectionMgr.SendContent(input);                
             }            
         }
@@ -117,7 +120,6 @@ namespace RaceGamePhone
             {
                 MessageBox.Show("Connect to server");
             }
-
         }
 
         private void btnConnect_Click(object sender, RoutedEventArgs e)

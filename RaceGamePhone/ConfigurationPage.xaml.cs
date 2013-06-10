@@ -27,12 +27,8 @@ namespace RaceGamePhone
         }
 
         private void btnConnect_Click(object sender, RoutedEventArgs e)
-        {
-            var frame = Application.Current.RootVisual as PhoneApplicationFrame;
-            var b = frame.Content as PhoneApplicationPage;
-            var last = NavigationService.BackStack.FirstOrDefault();
+        {            
             var mainPage = (App.Current as App).MainClassPointer;
-
             var connMgr = mainPage.connectionMgr;
             bool isSuccess = connMgr.Connect(tbAddress.Text);
 
