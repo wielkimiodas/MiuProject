@@ -23,8 +23,6 @@ namespace RaceGame
         World world;
         public Car car1;
         public Car car2;
-        PhysicObj[] cones;
-        PhysicObj[] tires;
 
         List<DrawableObject> objects = new List<DrawableObject>();
 
@@ -96,18 +94,52 @@ namespace RaceGame
             car2.level = 0.1f;
             objects.Add(car2);
 
-            cones = new PhysicObj[10];
-            for (int i = 1; i <= cones.Length; i++)
+            List<Vector2> conesPos = new List<Vector2>();
+            conesPos.Add(new Vector2(500, 500));
+            for(int i = 0; i < 10; i++)
+                for(int j = 0; j < 10 - i; j++)
+                    conesPos.Add(new Vector2(500 + 20 * (i + 1), 500 + 20 * (j + 1)));
+
+            conesPos.Add(new Vector2(500, 500));
+            for (int i = 0; i < 10; i++)
+                for (int j = 0; j < 10 - i; j++)
+                    conesPos.Add(new Vector2(500 + 20 * (i + 1), 500 + 20 * (j + 1)));
+            
+            Vector2[] cones = new Vector2[]
+                {
+                    new Vector2(500, 500),
+                    new Vector2(525, 500),
+                    new Vector2(550, 500),
+                    new Vector2(575, 500),
+                    new Vector2(600, 500),
+                    new Vector2(500, 525),
+                    new Vector2(500, 550),
+                    new Vector2(500, 575),
+                    new Vector2(500, 600),
+                    
+                    new Vector2(550, 2650),
+                    new Vector2(575, 2650),
+                    new Vector2(550, 2650),
+                    
+                    /*new Vector2(550, 550),
+                    new Vector2(550, 550),
+                    new Vector2(550, 550),
+                    
+                    new Vector2(550, 550),
+                    new Vector2(550, 550),
+                    new Vector2(550, 550),*/
+                };
+            foreach(Vector2 v in conesPos)
             {
-                cones[i - 1] = new PhysicObj(world, coneTexture, new Vector2(0.2f, 0.2f), 0.8f);
-                cones[i - 1].Position = new Vector2(75 * i, 0);
-                cones[i - 1].Restitution = 0.1f;
-                cones[i - 1].body.LinearDamping = 5.0f;
-                cones[i - 1].level = 0.9f;
-                objects.Add(cones[i - 1]);
+                PhysicObj obj = new PhysicObj(world, coneTexture, new Vector2(0.2f, 0.2f), 0.8f);
+                obj.Position = v;
+                obj.Restitution = 0.1f;
+                obj.body.LinearDamping = 5.0f;
+                obj.level = 0.9f;
+                objects.Add(obj);
             }
 
-            tires = new PhysicObj[10];
+            /*tires = new PhysicObj[10];
             for (int i = 1; i <= tires.Length; i++)
             {
                 tires[i - 1] = new PhysicObj(world, tireTexture, new Vector2(0.5f, 0.5f), 1);
@@ -116,12 +148,19 @@ namespace RaceGame
                 tires[i - 1].body.LinearDamping = 8.0f;
                 tires[i - 1].level = 0.9f;
                 objects.Add(tires[i - 1]);
-            }
+            }*/
 
-            for (int i = 0; i < 100; i++)
+            /*for (int i = 0; i < 100; i++)
             {
                 PhysicObj obj = new PhysicObj(world, blockTexture, new Vector2(10, 10), 1);
                 obj.Position = new Vector2(-100 - i * 100, -100);
+                obj.body.BodyType = BodyType.Static;
+                obj.body.Restitution = 0.0f;
+                objects.Add(obj);
+            }*/
+            {
+                PhysicObj obj = new PhysicObj(world, blockTexture, new Vector2(14, 18), 0.1f);
+                obj.Position = new Vector2(1300, 1500);
                 obj.body.BodyType = BodyType.Static;
                 obj.body.Restitution = 0.0f;
                 objects.Add(obj);
@@ -150,6 +189,7 @@ namespace RaceGame
                     DrawableObject obj = null;
                     if (track[i][j] == 0)
                     {
+                        continue;
                         obj = new DrawableObject(grassTex, 0);
                     }
                     else if (track[i][j] <= 4)
@@ -173,7 +213,8 @@ namespace RaceGame
             
             List<Car> cars = new List<Car>();
             cars.Add(car1);
-            camera1 = new Camera(cars, graphics, GraphicsDevice, new Rectangle(0, 0, graphics.PreferredBackBufferWidth/2,graphics.PreferredBackBufferHeight));
+            cars.Add(car2);
+            camera1 = new Camera(cars, graphics, GraphicsDevice, new Rectangle(0, 0, graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight));
 
             cars = new List<Car>();
             cars.Add(car2);
