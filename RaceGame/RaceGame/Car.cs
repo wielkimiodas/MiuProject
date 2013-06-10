@@ -75,8 +75,8 @@ namespace RaceGame
                 // jedzie do tylu
                 else if (speedInfo.angleCos < 0)
                 {
-                    float mul = (float)time.TotalSeconds * acceleration * inputState.acceleration;
-                    mul -= (float)time.TotalSeconds * breaking * inputState.breakVal;
+                    float mul = (float)time.TotalSeconds * breaking * inputState.acceleration;
+                    mul -= (float)time.TotalSeconds * acceleration * inputState.breakVal;
                     speedInfo.speed += speedInfo.direction * mul;
                     if (speedInfo.speed.Length() > maxBackwardSpeed)
                     {

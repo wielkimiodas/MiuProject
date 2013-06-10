@@ -17,7 +17,7 @@ namespace RaceGame
         public Rectangle rectangle;
         
         const float visibleCircle = 100;
-        const float velocityMul = 10f;
+        const float velocityMul = 1.5f;
 
         public Camera(List<Car> cars, GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice, Rectangle visibleRect)
         {
@@ -40,17 +40,27 @@ namespace RaceGame
                 updateMax(ref max, car.Position + visibleCircle);
 
                 Car.SpeedInfo info = car.getSpeed();
-                updateMinMax(ref min, ref max, car.Position + info.speed);
+                if (Math.Abs(info.speed.X) > Math.Abs(info.speed.Y))
+                    if (info.speed.X > 0)
+                        updateMinMax(ref min, ref max, car.Position + velocityMul * info.speed.Length() * Vector2.UnitX);
+                    else
+                        updateMinMax(ref min, ref max, car.Position + velocityMul * -info.speed.Length() * Vector2.UnitX);
+                else
+                    if (info.speed.Y > 0)
+                        updateMinMax(ref min, ref max, car.Position + velocityMul * info.speed.Length() * Vector2.UnitY);
+                    else
+                        updateMinMax(ref min, ref max, car.Position + velocityMul * -info.speed.Length() * Vector2.UnitY);
+                
                 center += car.Position / cars.Count;
             }
 
-            if (((max.X - min.X) / rectangle.Width) > ((max.Y - min.Y) / rectangle.Height))
+            if ((max.X - min.X) > (max.Y - min.Y))
             {
-                zoom = rectangle.Width / (max.X - min.X);
+                zoom = Math.Min(rectangle.Width, rectangle.Height) / (max.X - min.X);
             }
             else
             {
-                zoom = rectangle.Height / (max.Y - min.Y);
+                zoom = Math.Min(rectangle.Width, rectangle.Height) / (max.Y - min.Y);
             }
 
             zoom = Math.Min(zoom, 1);

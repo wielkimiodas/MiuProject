@@ -87,7 +87,7 @@ namespace RaceGame
             : this(world, texture, scale, 1f) { }
 
         public PhysicObj(World world, Texture2D texture, Vector2 scale, float density)
-            : base(texture, scale, Vector2.Zero, 0)
+            : base(texture, 0, scale, Vector2.Zero)
         {
             this.texture = texture;
             this.scale = scale;
