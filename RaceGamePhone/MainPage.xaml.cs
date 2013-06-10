@@ -21,6 +21,7 @@ namespace RaceGamePhone
     {
         private string address = "http://192.168.0.15:8001/test";
         private bool isStared = false;
+        private InputState input = new InputState();
         // Constructor
         public MainPage()
         {
@@ -30,41 +31,65 @@ namespace RaceGamePhone
             //InitAccelerometer();
         }
 
+        private double Normalize(double ptX, double ptY, double size)
+        {
+            var r = size / 2;
+            ptX = Math.Abs(ptX - r);
+            ptY = Math.Abs(ptY - r);
+            var d = Math.Sqrt(ptX * ptX + ptY * ptY);
+
+            return d / r;
+        }
+
         void Touch_FrameReported(object sender, TouchFrameEventArgs e)
         {
             TouchPoint primaryTouchPoint = e.GetPrimaryTouchPoint(null);
 
-
             TouchPointCollection touchPoints = e.GetTouchPoints(null);
-
-
+            
             foreach (TouchPoint tp in touchPoints)
             {
-                if (tp.Action == TouchAction.Down)
+                if (tp.Action == TouchAction.Move)
                 {
-                    var t = TransformToVisual(btnAcceleration);
-                    var absposition = t.Transform(new Point(0,0));
-                    absposition.X = Math.Abs(absposition.X);
-                    absposition.Y = Math.Abs(absposition.Y);
-                    if (tp.Position.X > absposition.X && tp.Position.Y > absposition.Y)
-                    {
-                        Debug.WriteLine("jestem tu:" + tp.Position.X + ", " + tp.Position.Y);
+                    var t = TransformToVisual(ContentPanel);
+                    var absposition = t.Transform(new Point(tp.Position.X, tp.Position.Y));
 
-                    }
-                    else
+                    if (absposition.X > 0
+                        && absposition.X < btnBreak.ActualHeight
+                        && absposition.Y > 0
+                        && absposition.Y < btnBreak.ActualWidth)
                     {
-                        Debug.WriteLine("nie");
-                    }
+                        //btn BREAK
+                        tbBrakeInfo.Text = "b-> x: " + absposition.X + " y:" + absposition.Y;
+                        double val = Normalize(absposition.X, absposition.Y, btnBreak.ActualHeight);
+                        tbBrakeInfo.Text += " " + val;
 
+                        if (val > 1) btnBreak_MouseLeave(null, null);
+
+                        input.breakVal = (float)val;
+                    }
                     
+                    if (absposition.X < btnAcceleration.ActualHeight
+                        && absposition.X > 0
+                        && absposition.Y < ContentPanel.ActualWidth
+                        && absposition.Y > ContentPanel.ActualWidth - btnAcceleration.ActualWidth)
+                    {
+                        //btn ACCEL
+                        var yp = absposition.Y - (ContentPanel.ActualWidth - btnAcceleration.ActualWidth);
+                        tbAccelInfo.Text = "a-> x: " + absposition.X + " y:" + yp;
+
+                        double val = Normalize(absposition.X, yp, btnAcceleration.ActualHeight);
+                        tbAccelInfo.Text += " " + val;
+                        if (val > 1) btnAcceleration_MouseLeave(null, null);
+                        input.acceleration = (float)val;
+                    }
                 }
 
             }
         }
 
         Accelerometer accelSensor;
-        SteeringReceiverClient client;
-        InputState input;
+        SteeringReceiverClient client;        
 
         public void InitAccelerometer()
         {
@@ -78,10 +103,7 @@ namespace RaceGamePhone
         {
             
             if (isStared && client != null)
-            {
-                input = new InputState();
-                input.acceleration = 1;
-                input.breakVal = 0;
+            {                                
                 input.steer = -(float)e.Y;
 
                 client.DoSteerAsync(input);
@@ -90,16 +112,14 @@ namespace RaceGamePhone
         }
 
 
-
-
         private void btnBreak_MouseMove(object sender, MouseEventArgs e)
         {
-            tbBrakeInfo.Text = "A=> x: " + e.GetPosition(btnBreak).X + Environment.NewLine + "y:" + e.GetPosition(btnBreak).Y;
+            //tbBrakeInfo.Text = "A=> x: " + e.GetPosition(btnBreak).X + Environment.NewLine + "y:" + e.GetPosition(btnBreak).Y;
         }
 
         private void btnAcceleration_MouseMove(object sender, MouseEventArgs e)
         {
-            tbAccelInfo.Text = "B=> x: " + e.GetPosition(btnAcceleration).X + Environment.NewLine + "y:" + e.GetPosition(btnAcceleration).Y;
+            //tbAccelInfo.Text = "B=> x: " + e.GetPosition(btnAcceleration).X + Environment.NewLine + "y:" + e.GetPosition(btnAcceleration).Y;
         }
 
         private void btnConnect_Click(object sender, RoutedEventArgs e)
@@ -134,10 +154,23 @@ namespace RaceGamePhone
         {
             if (e.Error == null)
             {
-                Debug.WriteLine("The answer is {0}", e.Result);
+                //Debug.WriteLine("The answer is {0}", e.Result);
             }
         }
 
+        private void btnAcceleration_MouseLeave(object sender, MouseEventArgs e)
+        {
+            Debug.WriteLine("acc mouse leave");
+            input.acceleration = 0;
+            tbAccelInfo.Text = "zero";
+        }
+
+        private void btnBreak_MouseLeave(object sender, MouseEventArgs e)
+        {
+            Debug.WriteLine("break mouse leave");
+            input.breakVal= 0;
+            tbBrakeInfo.Text = "zero";
+        }
 
     }
 }

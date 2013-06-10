@@ -122,13 +122,13 @@
 
         <!--ContentPanel - place additional content here-->
         <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
-            <Button Height="200" HorizontalAlignment="Right" VerticalAlignment="Bottom" Name="btnAcceleration" Width="200" BorderThickness="0" MouseMove="btnAcceleration_MouseMove" AllowDrop="False" ClickMode="Hover" Style="{StaticResource AccelBtnStyle}">            
+            <Button Height="200" HorizontalAlignment="Right" VerticalAlignment="Bottom" Name="btnAcceleration" Width="200" BorderThickness="0" MouseMove="btnAcceleration_MouseMove" AllowDrop="False" ClickMode="Hover" Style="{StaticResource AccelBtnStyle}" MouseLeave="btnAcceleration_MouseLeave">            
                 <Button.Background>
                     <ImageBrush ImageSource="/RaceGamePhone;component/Resources/circle_orange.png" />
                 </Button.Background>
             </Button>
             <TextBlock Height="84" HorizontalAlignment="Left" Margin="259,113,0,0" Name="tbAccelInfo" Text="" VerticalAlignment="Top" Width="191" />
-            <Button Height="200" HorizontalAlignment="Left" VerticalAlignment="Bottom" Name="btnBreak" Width="200" BorderThickness="0" MouseMove="btnBreak_MouseMove" ClickMode="Hover" Style="{StaticResource BrakeBtnStyle}">                
+            <Button Height="200" HorizontalAlignment="Left" VerticalAlignment="Bottom" Name="btnBreak" Width="200" BorderThickness="0" MouseMove="btnBreak_MouseMove" ClickMode="Hover" Style="{StaticResource BrakeBtnStyle}" MouseLeave="btnBreak_MouseLeave">                
                 <Button.Background>
                     <ImageBrush ImageSource="/RaceGamePhone;component/Resources/brake.png" />
                 </Button.Background>
