@@ -28,8 +28,8 @@
 
         <!--ContentPanel - place additional content here-->
         <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
-            <Button Content="Back" Height="72" HorizontalAlignment="Left" Margin="0,241,0,0" Name="btnBack" VerticalAlignment="Top" Width="160" Click="button1_Click" />
-            <Button Content="Connect" Height="72" HorizontalAlignment="Left" Margin="538,241,0,0" Name="btnConnect" VerticalAlignment="Top" Width="160" />
+            <Button Content="Back" Height="72" HorizontalAlignment="Left" Margin="0,241,0,0" Name="btnBack" VerticalAlignment="Top" Width="160" Click="btnBack_Click" />
+            <Button Content="Connect" Height="72" HorizontalAlignment="Left" Margin="538,241,0,0" Name="btnConnect" VerticalAlignment="Top" Width="160" Click="btnConnect_Click" />
             <TextBox Height="72" HorizontalAlignment="Left" Margin="0,46,0,0" Name="tbAddress" Text="192.168.0.15" VerticalAlignment="Top" Width="460" />
             <TextBlock Height="34" HorizontalAlignment="Left" Margin="12,6,0,0" Name="tbStatus" Text="Not connected" VerticalAlignment="Top" Width="391" />
         </Grid>

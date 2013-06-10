@@ -19,16 +19,16 @@ namespace RaceGamePhone
 {
     public partial class MainPage : PhoneApplicationPage
     {
-        private string address = "http://192.168.0.15:8001/test";
-        private bool isStared = false;
         private InputState input = new InputState();
+        private Accelerometer accelSensor;
+        public ConnectionManager connectionMgr;
+        
         // Constructor
         public MainPage()
         {
             InitializeComponent();
-            Touch.FrameReported += new TouchFrameEventHandler(Touch_FrameReported);
-
-            //InitAccelerometer();
+            connectionMgr = new ConnectionManager(this);
+            
         }
 
         private double Normalize(double ptX, double ptY, double size)
@@ -88,9 +88,6 @@ namespace RaceGamePhone
             }
         }
 
-        Accelerometer accelSensor;
-        SteeringReceiverClient client;        
-
         public void InitAccelerometer()
         {
             accelSensor = new Accelerometer();
@@ -102,74 +99,48 @@ namespace RaceGamePhone
         void accelSensor_ReadingChanged(object sender, AccelerometerReadingEventArgs e)
         {
             
-            if (isStared && client != null)
+            if (connectionMgr.IsStarted)
             {                                
                 input.steer = -(float)e.Y;
+                connectionMgr.SendContent(input);                
+            }            
+        }
 
-                client.DoSteerAsync(input);
+        private void StartGame()
+        {
+            if (connectionMgr.IsStarted)
+            {
+                InitAccelerometer();
+                Touch.FrameReported += new TouchFrameEventHandler(Touch_FrameReported);
             }
-            
-        }
+            else
+            {
+                MessageBox.Show("Connect to server");
+            }
 
-
-        private void btnBreak_MouseMove(object sender, MouseEventArgs e)
-        {
-            //tbBrakeInfo.Text = "A=> x: " + e.GetPosition(btnBreak).X + Environment.NewLine + "y:" + e.GetPosition(btnBreak).Y;
-        }
-
-        private void btnAcceleration_MouseMove(object sender, MouseEventArgs e)
-        {
-            //tbAccelInfo.Text = "B=> x: " + e.GetPosition(btnAcceleration).X + Environment.NewLine + "y:" + e.GetPosition(btnAcceleration).Y;
         }
 
         private void btnConnect_Click(object sender, RoutedEventArgs e)
         {
-
-            //NavigationService.Navigate(new Uri("/ConfigurationPage.xaml", UriKind.Relative));
-
-            if (client == null)
-            {
-                string ip = "192.168.0.15";//tbAddress.Text;
-                address = "http://" + ip + ":8001/MiuWebService";
-                try
-                {
-
-                    client = new SteeringReceiverClient(new BasicHttpBinding(), new EndpointAddress(address));
-                    isStared = true;
-                    //tbStatus.Text = "Connected";
-                    InitAccelerometer();
-
-                }
-                catch (Exception)
-                {
-                    isStared = false;
-                    //tbStatus.Text = "Connection could not be established";
-                }
-
-                client.DoSteerCompleted += new EventHandler<DoSteerCompletedEventArgs>(client_DoSteerCompleted);
-            }
-        }
-
-        void client_DoSteerCompleted(object sender, DoSteerCompletedEventArgs e)
-        {
-            if (e.Error == null)
-            {
-                //Debug.WriteLine("The answer is {0}", e.Result);
-            }
+            (App.Current as App).MainClassPointer = this;
+            NavigationService.Navigate(new Uri("/ConfigurationPage.xaml", UriKind.Relative));                       
         }
 
         private void btnAcceleration_MouseLeave(object sender, MouseEventArgs e)
         {
-            Debug.WriteLine("acc mouse leave");
             input.acceleration = 0;
             tbAccelInfo.Text = "zero";
         }
 
         private void btnBreak_MouseLeave(object sender, MouseEventArgs e)
         {
-            Debug.WriteLine("break mouse leave");
             input.breakVal= 0;
             tbBrakeInfo.Text = "zero";
+        }
+
+        private void btnStart_Click(object sender, RoutedEventArgs e)
+        {
+            StartGame();
         }
 
     }

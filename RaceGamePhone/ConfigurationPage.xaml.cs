@@ -15,14 +15,29 @@ namespace RaceGamePhone
 {
     public partial class ConfigurationPage : PhoneApplicationPage
     {
+        
         public ConfigurationPage()
         {
             InitializeComponent();
         }
 
-        private void button1_Click(object sender, RoutedEventArgs e)
+        private void btnBack_Click(object sender, RoutedEventArgs e)
         {
             NavigationService.GoBack();
+        }
+
+        private void btnConnect_Click(object sender, RoutedEventArgs e)
+        {
+            var frame = Application.Current.RootVisual as PhoneApplicationFrame;
+            var b = frame.Content as PhoneApplicationPage;
+            var last = NavigationService.BackStack.FirstOrDefault();
+            var mainPage = (App.Current as App).MainClassPointer;
+
+            var connMgr = mainPage.connectionMgr;
+            bool isSuccess = connMgr.Connect(tbAddress.Text);
+
+            if (isSuccess) tbStatus.Text = "Connected";
+            else tbStatus.Text = "Connection could not be established";
         }
     }
 }

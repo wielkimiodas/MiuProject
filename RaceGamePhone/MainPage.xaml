@@ -122,19 +122,20 @@
 
         <!--ContentPanel - place additional content here-->
         <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
-            <Button Height="200" HorizontalAlignment="Right" VerticalAlignment="Bottom" Name="btnAcceleration" Width="200" BorderThickness="0" MouseMove="btnAcceleration_MouseMove" AllowDrop="False" ClickMode="Hover" Style="{StaticResource AccelBtnStyle}" MouseLeave="btnAcceleration_MouseLeave">            
+            <Button Height="200" HorizontalAlignment="Right" VerticalAlignment="Bottom" Name="btnAcceleration" Width="200" BorderThickness="0" AllowDrop="False" ClickMode="Hover" Style="{StaticResource AccelBtnStyle}" MouseLeave="btnAcceleration_MouseLeave">            
                 <Button.Background>
                     <ImageBrush ImageSource="/RaceGamePhone;component/Resources/circle_orange.png" />
                 </Button.Background>
             </Button>
             <TextBlock Height="84" HorizontalAlignment="Left" Margin="259,113,0,0" Name="tbAccelInfo" Text="" VerticalAlignment="Top" Width="191" />
-            <Button Height="200" HorizontalAlignment="Left" VerticalAlignment="Bottom" Name="btnBreak" Width="200" BorderThickness="0" MouseMove="btnBreak_MouseMove" ClickMode="Hover" Style="{StaticResource BrakeBtnStyle}" MouseLeave="btnBreak_MouseLeave">                
+            <Button Height="200" HorizontalAlignment="Left" VerticalAlignment="Bottom" Name="btnBreak" Width="200" BorderThickness="0" ClickMode="Hover" Style="{StaticResource BrakeBtnStyle}" MouseLeave="btnBreak_MouseLeave">                
                 <Button.Background>
                     <ImageBrush ImageSource="/RaceGamePhone;component/Resources/brake.png" />
                 </Button.Background>
             </Button>
-            <Button Content="Connect" Height="72" HorizontalAlignment="Left" Margin="538,0,0,0" Name="btnConnect" VerticalAlignment="Top" Width="160" Click="btnConnect_Click" />
+            <Button Content="Connect" Height="72" HorizontalAlignment="Right" Name="btnConnect" VerticalAlignment="Top" Width="160" Click="btnConnect_Click" />
             <TextBlock Height="84" HorizontalAlignment="Left" Margin="259,256,0,0" Name="tbBrakeInfo" Text="" VerticalAlignment="Top" Width="191" />
+            <Button Content="Start" Height="72" HorizontalAlignment="Left" Name="btnStart" VerticalAlignment="Top" Width="160" Click="btnStart_Click" />
         </Grid>
     </Grid>
  

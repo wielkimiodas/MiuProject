@@ -23,6 +23,8 @@ namespace RaceGamePhone
         /// <returns>The root frame of the Phone Application.</returns>
         public PhoneApplicationFrame RootFrame { get; private set; }
 
+        public MainPage MainClassPointer { get; set; }
+
         /// <summary>
         /// Constructor for the Application object.
         /// </summary>
@@ -56,7 +58,6 @@ namespace RaceGamePhone
                 // and consume battery power when the user is not using the phone.
                 PhoneApplicationService.Current.UserIdleDetectionMode = IdleDetectionMode.Disabled;
             }
-
         }
 
         // Code to execute when the application is launching (eg, from Start)
