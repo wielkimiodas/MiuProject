@@ -32,7 +32,11 @@ namespace RaceGamePhone
             var connMgr = mainPage.connectionMgr;
             bool isSuccess = connMgr.Connect(tbAddress.Text);
 
-            if (isSuccess) tbStatus.Text = "Connected";
+            if (isSuccess)
+            {
+                tbStatus.Text = "Connected";
+                mainPage.btnConnect.IsEnabled = false;
+            }
             else tbStatus.Text = "Connection could not be established";
         }
     }

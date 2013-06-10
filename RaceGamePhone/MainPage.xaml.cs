@@ -22,6 +22,7 @@ namespace RaceGamePhone
         private InputState input = new InputState();
         private Accelerometer accelSensor;
         public ConnectionManager connectionMgr;
+        bool gameStarted=false;
         
         // Constructor
         public MainPage()
@@ -84,7 +85,6 @@ namespace RaceGamePhone
                         input.acceleration = 1 - (float)val;
                     }
                 }
-
             }
         }
 
@@ -113,8 +113,9 @@ namespace RaceGamePhone
         {
             if (connectionMgr.IsStarted)
             {
+                gameStarted = true;
                 InitAccelerometer();
-                Touch.FrameReported += new TouchFrameEventHandler(Touch_FrameReported);
+                Touch.FrameReported += new TouchFrameEventHandler(Touch_FrameReported);                
             }
             else
             {
@@ -142,6 +143,7 @@ namespace RaceGamePhone
 
         private void btnStart_Click(object sender, RoutedEventArgs e)
         {
+            if(!gameStarted)
             StartGame();
         }
 
